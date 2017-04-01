@@ -55,6 +55,8 @@ RUN git clone https://github.com/lihebi/dotinfo ~/.info
 RUN git clone https://github.com/lihebi/stumpwm.d ~/.stumpwm.d
 RUN cd ~/.hebi && ./install.sh
 
+# run emacs to bootstrap the packages
+
 # no quicklisp
 # no gtest compilation
 # no srcml
