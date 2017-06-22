@@ -1,0 +1,62 @@
+#+TITLE: Building Helium Container
+* GCC
+Old version of ubuntu and debian does not have the newer gcc version,
+it will cause some problems, such as =std::to_string= not defined
+
+* Boost
+Helium requires boost 1.60 or later (fs::relative).
+
+Debian
+- jessie: boost:1.55
+- stretch: boost:1.62
+
+Ubuntu:
+- trusty 14.04: boost:1.54
+- xenial 16.04: boost 1.58
+- yakkety 16.10: boost 1.61
+- zesty 17.04: boost 1.62
+- artful 17.10: boost 1.62
+
+The boost version of ubuntu has link problem for program options. Not
+sure why, and it seems to conflict with c++11 <string> when
+compile. Trying compiling manually.
+
+UPDATE: Compilation of boost partly failed with missing pyconfig.h.
+UPDATE: The manually built boost still have problems. Still c++11
+string conflict. Should not use ubuntu.
+
+* Srcml
+I cannot compile srcml on any distributions.
+
+SrcML works on all ubuntu.
+
+Arch:
+- srcml does not work
+
+Debian:
+- jessie: srcml works
+- stretch: 
+  - srcml does not work because libcrypto is 1.0.2 instead of 1.0.0
+    (openssl version also not match)
+
+
+* LLVM
+** Debian
+- The version comes with debian cause does not support RTTI. 
+- Manual compilation of LLVM works on debian.
+
+Helium requires RTTI support of LLVM, so cmake compile with flag:
+~-DLLVM_ENABLE_RTTI=ON~. The archlinux compilation script:
+https://git.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/llvm
+
+Normally if your code does not use =dynamic_cast=, you don't need
+RTTI, in this case just use =-fno-rtti= flag when compile. But Helium
+uses =dynamic_cast=
+
+** Ubuntu
+The LLVM binary for ubuntu: http://apt.llvm.org/ put the Clang files
+in the wrong directories, so that cmake has trouble to find them.
+
+* Conclusion
+- Use ubuntu 17.04
+- Compile LLVM myself

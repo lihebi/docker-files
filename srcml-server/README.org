@@ -1,0 +1,36 @@
+#+TITLE: Readme
+
+Run the server:
+
+#+BEGIN_QUOTE
+docker network create --driver bridge srcml-inner-network
+docker run --network srcml-inner-network --name srcml-server-container -d srcml-server
+#+END_QUOTE
+
+Configure the DNS:
+#+BEGIN_QUOTE
+docker network inspect srcml-inner-network
+#+END_QUOTE
+
+Get the IP address, and add to the /etc/hosts
+#+BEGIN_QUOTE
+172.18.0.2 srcml-server-container
+#+END_QUOTE
+
+Now it should be fine to run srcml-client.py script
+
+To run another helium container
+
+
+#+BEGIN_QUOTE
+docker run -it --network srcml-inner-network --name helium-container --link srcml-server-container lihebi/helium-arch
+#+END_QUOTE
+
+The inner helium should work no problem
+
+
+To be able to share storage, you might want to add
+#+BEGIN_QUOTE
+-v /path/to/local:/mnt
+#+END_QUOTE
+
