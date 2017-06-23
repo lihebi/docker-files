@@ -12,6 +12,9 @@ RUN pacman -S --noconfirm git cmake
 # need to install at least a font so that the png file can be outputed
 RUN pacman -S --noconfirm graphviz ttf-dejavu
 
+# some commands not found in base/archlinux
+RUN pacman -S --noconfirm man
+
 
 
 # Common Packages
@@ -42,8 +45,17 @@ RUN pacman -S --noconfirm tigervnc
 # app
 # the command is remove-viewer
 # FIXME not working
-# RUN pacman -S --noconfirm virt-viewer
-# RUN pacman -S --noconfirm feh tidy unzip mplayer youtube-dl markdown
+RUN pacman -S --noconfirm virt-viewer
+RUN pacman -S --noconfirm feh tidy unzip mplayer youtube-dl markdown
+
+RUN pacman -S --noconfirm lxde openbox x11vnc xfce4 xorg-twm xorg-xclock
+
+# add user
+# RUN useradd -ms /bin/bash admin
+# USER admin
+# WORKDIR /home/admin
+
+# CMD vncserver :1
 
 # WORKDIR /root
 # need manually perform this because it needs password
