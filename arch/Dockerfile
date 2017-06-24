@@ -61,13 +61,35 @@ RUN pacman $PACMAN_OPTIONS -S lxdm xorg-xdm lightdm gdm xorg-twm
 RUN useradd -m admin
 RUN echo "admin ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/admin && chmod 0440 /etc/sudoers.d/admin
 USER admin
-WORKDIR /home/admin/tmp
+WORKDIR /home/admin
 RUN git clone https://aur.archlinux.org/cl-ppcre && cd cl-ppcre && makepkg -si --noconfirm
 RUN git clone https://aur.archlinux.org/clx-git && cd clx-git && makepkg -si --noconfirm
 RUN git clone https://aur.archlinux.org/stumpwm && cd stumpwm && echo "md5sums=('SKIP' 'SKIP')" >> PKGBUILD && makepkg -si --noconfirm
 RUN git clone https://aur.archlinux.org/quicklisp && cd quicklisp && makepkg -si --noconfirm
 # RUN git clone https://aur.archlinux.org/rtags-git && cd rtags-git && makepkg -si --noconfirm
 # RUN git clone https://aur.archlinux.org/plantuml && cd plantuml && makepkg -si --noconfirm
+
+RUN rm -r cl-ppcre clx-git stumpwm quicklisp
+
+USER root
+
+RUN useradd -m user && echo "user:user" | chpasswd
+RUN echo "user ALL=(ALL) ALL" > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
+
+
+USER user
+WORKDIR /home/user
+RUN echo -e "#/bin/sh\nexec stumpwm" > .xinitrc && chmod +x .xinitrc
+RUN mkdir -p ~/.vnc && echo "vncpasswd" | vncpasswd -f > ~/.vnc/passwd && chmod 0600 ~/.vnc/passwd
+# # # RUN vncserver
+RUN git clone https://github.com/lihebi/stumpwm.d .stumpwm.d
+
+COPY ./startup.sh /usr/bin/startup.sh
+# RUN vncserver -xstartup ~/.xinitrc
+ENTRYPOINT ["/usr/bin/startup.sh"]
+# CMD ["vncserver", "-xstartup", "~/.xinitrc", "&&", "/bin/bash"]
+# CMD echo "hello"
+
 
 
 ##############################
