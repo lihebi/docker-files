@@ -78,13 +78,26 @@ RUN echo "user ALL=(ALL) ALL" > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d
 
 
 USER user
-WORKDIR /home/user
-RUN echo -e "#/bin/sh\nexec stumpwm" > .xinitrc && chmod +x .xinitrc
-RUN mkdir -p ~/.vnc && echo "vncpasswd" | vncpasswd -f > ~/.vnc/passwd && chmod 0600 ~/.vnc/passwd
-# # # RUN vncserver
+WORKDIR /home/user/
+# config files
 RUN git clone https://github.com/lihebi/stumpwm.d .stumpwm.d
 
+# copy files
+COPY xinitrc.d .xinitrc.d
 COPY ./startup.sh /usr/bin/startup.sh
+# RUN echo -e "#/bin/sh\nexec stumpwm" > .xinitrc && chmod +x .xinitrc
+
+# RUN vncserver
+RUN mkdir -p ~/.vnc && echo "vncpasswd" | vncpasswd -f > ~/.vnc/passwd && chmod 0600 ~/.vnc/passwd
+
+# use -P to publish all exposed port
+# docker run -d -p 5901:5901 -p 5902:5902 lihebi/hebi-arch
+# use C-] C-[ to detach, do not exit the container
+# use docker attach <name> to attach
+# docker exec <name> bash cannot run sudo command
+EXPOSE 5901
+EXPOSE 5902
+
 # RUN vncserver -xstartup ~/.xinitrc
 ENTRYPOINT ["/usr/bin/startup.sh"]
 # CMD ["vncserver", "-xstartup", "~/.xinitrc", "&&", "/bin/bash"]
