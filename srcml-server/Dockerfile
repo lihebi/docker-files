@@ -18,7 +18,7 @@ COPY ./server.py /usr/local/bin/
 EXPOSE 5678
 
 # CMD python3 /usr/local/bin/server.py
-CMD ["python3" "/usr/local/bin/server.py"]
+CMD [ "python3", "/usr/local/bin/server.py" ]
 
 # run this container by
 # docker run -p 5678:5678 -d srcml-server
