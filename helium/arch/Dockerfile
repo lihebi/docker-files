@@ -10,8 +10,14 @@ RUN pacman -S --noconfirm emacs
 
 RUN pacman -S --noconfirm git cmake
 # need to install at least a font so that the png file can be outputed
-RUN pacman -S graphviz ttf-dejavu
+RUN pacman -S --noconfirm graphviz ttf-dejavu
 
 # WORKDIR /root
 # need manually perform this because it needs password
-# RUN git clone https://github.com/lihebi/helium
+RUN git clone https://github.com/lihebi/helium /usr/src/helium
+WORKDIR /usr/src/helium
+RUN mkdir build
+WORKDIR /usr/src/helium/build
+RUN cmake .. && make -j4
+WORKDIR /usr/src/helium
+RUN bash setup.sh
