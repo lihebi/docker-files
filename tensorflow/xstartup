@@ -1,0 +1,10 @@
+#!/bin/sh
+
+xrdb $HOME/.Xresources
+vncconfig -nowin&
+
+# I also need to source the profile
+# FIXME this does not seem to be loaded
+source $HOME/.profile
+
+exec openbox-session
